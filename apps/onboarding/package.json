@@ -15,8 +15,6 @@
     "start": "node dist/server/server.js"
   },
   "dependencies": {
-    "@bazodiac/config": "*",
-    "@bazodiac/services": "*",
     "@google/genai": "^1.34.0",
     "@supabase/supabase-js": "^2.90.1",
     "@types/node": "^22.14.0",

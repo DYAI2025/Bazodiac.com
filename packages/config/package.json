@@ -1,0 +1,7 @@
+{
+  "name": "@bazodiac/config",
+  "version": "1.0.0",
+  "description": "Shared configuration for Bazodiac apps",
+  "main": "index.ts",
+  "type": "module"
+}
