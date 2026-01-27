@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bazodiac | Fusioned Firmament</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&family=Montserrat:wght@200;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-space-black text-broken-white overflow-x-hidden">
+    <div class="noise-overlay"></div>
+
+    <!-- Intro Video -->
+    <video id="intro-video" class="fixed inset-0 w-full h-full object-cover z-[9998]" style="display: none; opacity: 1;" playsinline>
+        <source src="./video/intro.mp4" type="video/mp4">
+    </video>
+
+    <!-- Background Ambient Music -->
+    <audio id="background-ambient" loop style="display: none;">
+        <source src="./audio/ambient-instrumental.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Start Overlay -->
+    <div id="interaction-overlay" class="fixed inset-0 z-[10000] bg-black/95 backdrop-blur flex items-center justify-center">
+        <div class="text-center">
+            <div class="mb-16">
+                <h1 class="text-4xl font-montserrat font-bold uppercase tracking-widest mb-4 text-white/80">Bazodiac</h1>
+                <p class="text-xs uppercase tracking-[0.3em] text-silver/60">Astral Cathedral</p>
+            </div>
+            <button id="start-btn" class="px-16 py-4 border border-white/20 hover:border-accent transition-all duration-700 bg-white/5 backdrop-blur-md hover:bg-accent/10">
+                <span class="text-xs uppercase tracking-[0.6em] text-white/80">Initiate Singularity</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="custom-cursor" class="custom-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-crosshair"></div>
+    </div>
+
+    <!-- Audio Control Panel (Top Right) -->
+    <div id="audio-control-panel" class="fixed top-8 right-8 z-40 flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-6 py-3">
+        <!-- Volume Slider -->
+        <div class="flex items-center gap-3">
+            <i data-lucide="volume-2" class="w-4 h-4 text-silver/60"></i>
+            <input id="volume-slider" type="range" min="0" max="100" value="50" class="w-24 h-1 bg-white/10 rounded-full cursor-pointer accent-accent">
+        </div>
+        <!-- Music Toggle Button -->
+        <button id="music-toggle" class="flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full hover:bg-white/5 transition-all text-xs uppercase tracking-widest font-semibold text-silver/80 hover:text-white">
+            <i data-lucide="music" class="w-4 h-4"></i>
+            <span>Music ON</span>
+        </button>
+    </div>
+
+    <!-- Nebula Distortion Layer -->
+    <div id="nebula-lens" class="nebula-lens"></div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-transparent backdrop-blur-sm border-b border-white/5">
+        <div class="flex items-center gap-2 interactive">
+            <div class="w-8 h-8 rounded-full border border-silver flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-silver rounded-full animate-pulse"></div>
+            </div>
+            <span class="font-bold tracking-widest uppercase text-xl font-montserrat">Bazodiac</span>
+        </div>
+        
+        <nav class="hidden md:flex items-center gap-12 text-xs uppercase tracking-widest font-semibold">
+            <a href="#how-it-works" class="nav-link interactive" data-i18n="nav_how_it_works">How it works</a>
+            <a href="#agents" class="nav-link interactive" data-i18n="nav_agents">Agents</a>
+            <div class="magnetic-wrap">
+                <a href="#start" class="px-6 py-2 border border-silver/30 hover:border-silver transition-all interactive btn-magnetic" data-i18n="nav_start">Start</a>
+            </div>
+            <div id="lang-toggle" class="lang-switch interactive">
+                <div class="lang-slider"></div>
+                <span class="lang-option active">EN</span>
+                <span class="lang-option">DE</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+            <div class="absolute inset-0 z-0 flex items-center justify-center">
+                <div class="synthesis-core-wrap">
+                    <!-- Updated Image URL to a working high-end abstract -->
+                    <img src="https://images.unsplash.com/photo-1614732414444-af963171f61d?auto=format&fit=crop&w=2048&q=80" 
+                         alt="Synthesis Core" 
+                         class="synthesis-core opacity-20 w-[600px] h-[600px] object-cover rounded-full mix-blend-screen filter grayscale brightness-150 blur-md">
+                </div>
+            </div>
+
+            <canvas id="synthesis-engine" class="absolute inset-0 z-10 pointer-events-none opacity-40"></canvas>
+            
+            <div class="relative z-20 pointer-events-none">
+                <h1 class="text-7xl md:text-[130px] font-bold font-montserrat tracking-tighter leading-none mb-4" data-i18n="hero_title">Bazodiac</h1>
+                <p class="text-lg md:text-2xl font-extralight tracking-[0.3em] text-silver/80 uppercase mb-8" data-i18n="hero_subtitle">Fusioned Firmament — Horoscope AI Consulting</p>
+                <p class="max-w-xl mx-auto text-silver/60 mb-12 font-light leading-relaxed" data-i18n="hero_value_prop">We compute real celestial positions at your exact birth time for a synthesis of Western and BaZi astrology.</p>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center gap-6 pointer-events-auto">
+                    <div class="magnetic-wrap">
+                        <button class="btn-primary interactive group relative px-10 py-4 bg-broken-white text-space-black font-semibold uppercase tracking-widest text-sm btn-magnetic" data-i18n="cta_primary">
+                            Get your reading
+                        </button>
+                    </div>
+                    <div class="magnetic-wrap">
+                        <button class="btn-secondary interactive px-10 py-4 border border-silver/30 hover:bg-white/5 transition-all uppercase tracking-widest text-sm btn-magnetic" data-i18n="cta_secondary">
+                            How it works
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proof Section -->
+        <section class="py-32 px-8 max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-16 text-center">
+                <div class="proof-card opacity-0">
+                    <i data-lucide="compass" class="w-8 h-8 mx-auto mb-6 text-accent"></i>
+                    <h3 class="text-xs uppercase tracking-widest mb-4 font-bold" data-i18n="proof_1_title">Astronomical Precision</h3>
+                    <p class="text-silver/50 font-light" data-i18n="proof_1_desc">Real sky positions at your exact birth moment.</p>
+                </div>
+                <div class="proof-card opacity-0">
+                    <i data-lucide="cpu" class="w-8 h-8 mx-auto mb-6 text-accent"></i>
+                    <h3 class="text-xs uppercase tracking-widest mb-4 font-bold" data-i18n="proof_2_title">Neural Synthesis</h3>
+                    <p class="text-silver/50 font-light" data-i18n="proof_2_desc">Western Astrology + BaZi synthesis through advanced LLMs.</p>
+                </div>
+                <div class="proof-card opacity-0">
+                    <i data-lucide="shield-check" class="w-8 h-8 mx-auto mb-6 text-accent"></i>
+                    <h3 class="text-xs uppercase tracking-widest mb-4 font-bold" data-i18n="proof_3_title">Serious Guidance</h3>
+                    <p class="text-silver/50 font-light" data-i18n="proof_3_desc">AI agents trained for serious, analytical consulting.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agents Section -->
+        <section id="agents" class="py-32 px-8">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 lg:gap-16">
+                <!-- Levi Card -->
+                <div class="tilt-card-wrap">
+                    <div class="agent-card glass-card interactive">
+                        <div class="card-glint"></div>
+                        <div class="card-content-parallax h-full p-12 flex flex-col justify-end min-h-[600px]">
+                            <div class="parallax-bg absolute inset-0 opacity-40 overflow-hidden">
+                                <img src="https://r2-bucket.flowith.net/f/2ddb3efc1855cc5b/cosmic_structure_logic_visual_index_1%402048x2048.jpeg" 
+                                     alt="Levi Structural" class="w-full h-full object-cover grayscale scale-110">
+                            </div>
+                            <div class="parallax-layer relative z-10" data-depth="0.15">
+                                <span class="text-[10px] uppercase tracking-[0.4em] text-accent font-bold mb-2 block" data-i18n="levi_role">The Architect</span>
+                                <h2 class="text-5xl font-montserrat font-bold mb-4" data-i18n="levi_name">Levi</h2>
+                                <p class="text-silver/70 font-light mb-8 max-w-sm leading-relaxed" data-i18n="levi_desc">Analytical, structured, and system-driven. Levi decodes the logic of your stars with mathematical precision.</p>
+                                <button class="text-xs uppercase tracking-widest font-bold flex items-center gap-2 group/btn border border-white/10 px-6 py-3 rounded-full hover:bg-white/5 transition-all">
+                                    <span data-i18n="talk_levi">Talk to Levi</span>
+                                    <i data-lucide="chevron-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Victoria Card -->
+                <div class="tilt-card-wrap">
+                    <div class="agent-card glass-card interactive">
+                        <div class="card-glint"></div>
+                        <div class="card-content-parallax h-full p-12 flex flex-col justify-end min-h-[600px]">
+                            <div class="parallax-bg absolute inset-0 opacity-40 overflow-hidden">
+                                <img src="https://r2-bucket.flowith.net/f/db67c119da6f754e/cosmic_intuition_guidance_visual_index_2%402048x2048.jpeg" 
+                                     alt="Victoria Intuitive" class="w-full h-full object-cover grayscale scale-110">
+                            </div>
+                            <div class="parallax-layer relative z-10" data-depth="0.15">
+                                <span class="text-[10px] uppercase tracking-[0.4em] text-accent font-bold mb-2 block" data-i18n="victoria_role">The Oracle</span>
+                                <h2 class="text-5xl font-montserrat font-bold mb-4" data-i18n="victoria_name">Victoria</h2>
+                                <p class="text-silver/70 font-light mb-8 max-w-sm leading-relaxed" data-i18n="victoria_desc">Intuitive, empathetic, and visionary. Victoria translates cosmic energy into profound personal guidance.</p>
+                                <button class="text-xs uppercase tracking-widest font-bold flex items-center gap-2 group/btn border border-white/10 px-6 py-3 rounded-full hover:bg-white/5 transition-all">
+                                    <span data-i18n="talk_victoria">Talk to Victoria</span>
+                                    <i data-lucide="chevron-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section id="how-it-works" class="py-32 px-8">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-center text-3xl font-montserrat font-semibold mb-20 uppercase tracking-[0.4em]" data-i18n="how_it_works_title">The Process</h2>
+                <div class="simulation-container glass-card p-16 relative overflow-hidden">
+                    <div class="grid md:grid-cols-3 gap-16 relative z-10">
+                        <div class="step-sim" data-step="1">
+                            <div class="text-[10px] font-mono text-accent mb-4 opacity-50 uppercase" data-i18n="sim_step_1">Translating birth coordinates...</div>
+                            <div class="h-px bg-white/10 w-full mb-8 relative overflow-hidden">
+                                <div class="step-progress h-full bg-accent absolute left-0 top-0 w-0 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-3" data-i18n="step_1_title">Input Data</h4>
+                            <p class="text-silver/50 text-sm font-light leading-relaxed" data-i18n="step_1_desc">Enter birth date, time, and location with high precision.</p>
+                        </div>
+                        <div class="step-sim" data-step="2">
+                            <div class="text-[10px] font-mono text-accent mb-4 opacity-50 uppercase" data-i18n="sim_step_2">Computing BaZi pillars...</div>
+                            <div class="h-px bg-white/10 w-full mb-8 relative overflow-hidden">
+                                <div class="step-progress h-full bg-accent absolute left-0 top-0 w-0 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-3" data-i18n="step_2_title">Computation</h4>\
+                            <p class="text-silver/50 text-sm font-light leading-relaxed" data-i18n="step_2_desc">We compute real celestial positions + BaZi pillars integration.</p>
+                        </div>
+                        <div class="step-sim" data-step="3">
+                            <div class="text-[10px] font-mono text-accent mb-4 opacity-50 uppercase" data-i18n="sim_step_3">Generating synthesis...</div>
+                            <div class="h-px bg-white/10 w-full mb-8 relative overflow-hidden">
+                                <div class="step-progress h-full bg-accent absolute left-0 top-0 w-0 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-3" data-i18n="step_3_title">Synthesis</h4>
+                            <p class="text-silver/50 text-sm font-light leading-relaxed" data-i18n="step_3_desc">Levi & Victoria deliver your integrated, multi-system reading.</p>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 pointer-events-none opacity-[0.02]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 60px 60px;"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-24 px-8 border-t border-white/5 bg-space-black/80 relative">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+            <div class="max-w-sm">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="font-bold tracking-widest uppercase text-xl font-montserrat">Bazodiac</span>
+                </div>
+                <p class="text-xs text-silver/40 leading-relaxed font-light" data-i18n="footer_disclaimer">
+                    For self-reflection and personal growth. Not intended as medical or financial advice. We treat your birth data with extreme sensitivity and privacy.
+                </p>
+            </div>
+            <div class="flex gap-20 text-[10px] uppercase tracking-[0.2em] font-bold">
+                <div class="flex flex-col gap-5">
+                    <a href="#" class="nav-link interactive">Privacy Policy</a>
+                    <a href="#" class="nav-link interactive">Terms of Service</a>
+                </div>
+                <div class="flex flex-col gap-5">
+                    <a href="#" class="nav-link interactive">Legal Notice</a>
+                    <a href="#" class="nav-link interactive">Contact Us</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-20 text-center text-[9px] text-silver/20 tracking-[0.3em] uppercase">
+            © 2026 Bazodiac Systemic Consulting — Harmonizing the heavens.
+        </div>
+    </footer>
+
+    <script>console.log('✓ HTML loaded, about to load module');</script>
+    <script type="module" src="scripts.js"></script>
+</body>
+</html>
