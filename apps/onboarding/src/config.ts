@@ -7,7 +7,7 @@ export const APP_VERSION = '1.0.0';
 // BaziEngine Remote - BASE URL only, no trailing slash
 // In production, we default to empty string which result in relative paths (same-origin)
 // In development, we fallback to the known remote engine for easier testing
-const DEFAULT_REMOTE = import.meta.env.DEV ? 'https://baziengine-v2.fly.dev' : '';
+const DEFAULT_REMOTE = import.meta.env.DEV ? 'https://baziengine-v2-qqrn0a-production.up.railway.app' : '';
 export const BAZI_ENGINE_BASE_URL = import.meta.env.VITE_BAZI_ENGINE_URL || DEFAULT_REMOTE;
 
 // Derived endpoints (constructed from base - prevents double /api/ paths)

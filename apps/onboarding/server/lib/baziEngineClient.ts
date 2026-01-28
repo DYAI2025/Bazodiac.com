@@ -77,5 +77,5 @@ export class BaziEngineClient {
 
 // Default instance
 export const baziEngine = new BaziEngineClient(
-  process.env.BAZI_ENGINE_URL || 'https://baziengine-v2.fly.dev'
+  process.env.BAZI_ENGINE_URL || 'https://baziengine-v2-qqrn0a-production.up.railway.app'
 );

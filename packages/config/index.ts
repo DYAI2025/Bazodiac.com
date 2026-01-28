@@ -56,7 +56,7 @@ function loadConfig(): BazodiacConfig {
             apiKey: getEnv('GEMINI_API_KEY', true),
         },
         baziEngine: {
-            url: getEnv('BAZI_ENGINE_URL', false) || 'https://baziengine-v2.fly.dev',
+            url: getEnv('BAZI_ENGINE_URL', false) || 'https://baziengine-v2-qqrn0a-production.up.railway.app',
         },
         app: {
             name: 'Bazodiac',
