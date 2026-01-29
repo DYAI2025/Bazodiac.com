@@ -1,0 +1,54 @@
+# Dependencies - will be installed fresh in container
+node_modules
+*/node_modules
+**/node_modules
+
+# Build outputs - will be generated in container
+dist
+*/dist
+**/dist
+.next
+**/.next
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Environment files (secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files (not needed in production)
+coverage
+**/*.test.ts
+**/*.spec.ts
+**/tests
+**/__tests__
+
+# Documentation (not needed in production build)
+*.md
+!README.md
+docs
+
+# Development files
+.eslintcache
+.prettierignore
+.editorconfig
